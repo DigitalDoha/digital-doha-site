@@ -110,15 +110,15 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
   const style = document.createElement('style');
   style.textContent = `
-    .external-brand-logo{display:block;object-fit:contain;background:#fff;border-radius:8px}
+    .external-brand-logo{display:block;object-fit:contain;background:transparent;border-radius:0}
     .external-brand-logo--header{width:245px;max-width:42vw;height:50px}
     .external-logo-plaque{display:flex!important;align-items:center!important;justify-content:center!important;grid-template-columns:1fr!important;padding:42px!important}
-    .external-brand-logo--hero{width:min(100%,610px);max-height:300px;border-radius:16px;box-shadow:0 26px 60px rgba(0,0,0,.2)}
-    .external-brand-logo--footer{width:290px;max-width:100%;height:auto;border-radius:10px}
+    .external-brand-logo--hero{width:min(100%,610px);max-height:300px;border-radius:0;box-shadow:none}
+    .external-brand-logo--footer{width:290px;max-width:100%;height:auto;border-radius:0}
     @media(max-width:760px){
       .external-brand-logo--header{width:190px;max-width:62vw;height:42px}
       .external-logo-plaque{min-height:230px!important;padding:26px 20px!important}
-      .external-brand-logo--hero{max-height:220px;border-radius:12px}
+      .external-brand-logo--hero{max-height:220px;border-radius:0}
       .external-brand-logo--footer{width:240px}
     }
   `;
