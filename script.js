@@ -71,41 +71,54 @@ quoteForm?.addEventListener('submit', (event) => {
 
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// Unified brand logo supplied by Premier.
+// Premier supplied logo. Use IMGpx when available, but never leave a broken image.
 (() => {
   const logoUrl = 'https://imgpx.com/en/O6UYtcruhodw.png';
   const alt = 'Premier Projects for Food Trading & Services';
 
-  const makeLogo = (className) => {
+  const cloneChildren = (element) => Array.from(element.childNodes).map(node => node.cloneNode(true));
+
+  const installLogo = (element, className, onRestore) => {
+    if (!element) return;
+
+    const fallbackNodes = cloneChildren(element);
     const img = document.createElement('img');
     img.src = logoUrl;
     img.alt = alt;
     img.className = className;
     img.loading = 'eager';
     img.decoding = 'async';
-    return img;
+    img.referrerPolicy = 'no-referrer';
+
+    img.addEventListener('error', () => {
+      element.replaceChildren(...fallbackNodes.map(node => node.cloneNode(true)));
+      if (onRestore) onRestore();
+    }, { once: true });
+
+    element.replaceChildren(img);
   };
 
   const headerBrand = document.querySelector('.site-header .brand');
-  if (headerBrand) {
-    headerBrand.replaceChildren(makeLogo('external-brand-logo external-brand-logo--header'));
-  }
+  installLogo(headerBrand, 'external-brand-logo external-brand-logo--header');
 
   const heroPlaque = document.querySelector('.plaque-inner');
   if (heroPlaque) {
-    heroPlaque.replaceChildren(makeLogo('external-brand-logo external-brand-logo--hero'));
     heroPlaque.classList.add('external-logo-plaque');
+    installLogo(
+      heroPlaque,
+      'external-brand-logo external-brand-logo--hero',
+      () => heroPlaque.classList.remove('external-logo-plaque')
+    );
   }
 
   const footerBrand = document.querySelector('.footer-logo');
-  if (footerBrand) {
-    footerBrand.replaceChildren(makeLogo('external-brand-logo external-brand-logo--footer'));
-  }
+  installLogo(footerBrand, 'external-brand-logo external-brand-logo--footer');
 
+  // Use the site's local favicon so the browser-tab icon does not depend on IMGpx.
   const favicon = document.querySelector('link[rel="icon"]') || document.createElement('link');
   favicon.rel = 'icon';
-  favicon.type = 'image/png';
-  favicon.href = logoUrl;
+  favicon.type = 'image/svg+xml';
+  favicon.href = '/favicon.svg';
   if (!favicon.parentNode) document.head.appendChild(favicon);
 
   const style = document.createElement('style');
