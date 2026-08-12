@@ -71,50 +71,45 @@ quoteForm?.addEventListener('submit', (event) => {
 
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// Premier supplied logo. Use IMGpx when available, but never leave a broken image.
+// Premier supplied logo. Keep the built-in brand visible until the external PNG has loaded successfully.
 (() => {
   const logoUrl = 'https://imgpx.com/en/O6UYtcruhodw.png';
   const alt = 'Premier Projects for Food Trading & Services';
 
-  const cloneChildren = (element) => Array.from(element.childNodes).map(node => node.cloneNode(true));
-
-  const installLogo = (element, className, onRestore) => {
+  const preloadAndInstall = (element, className, onLoad) => {
     if (!element) return;
 
-    const fallbackNodes = cloneChildren(element);
     const img = document.createElement('img');
-    img.src = logoUrl;
     img.alt = alt;
     img.className = className;
     img.loading = 'eager';
     img.decoding = 'async';
     img.referrerPolicy = 'no-referrer';
 
-    img.addEventListener('error', () => {
-      element.replaceChildren(...fallbackNodes.map(node => node.cloneNode(true)));
-      if (onRestore) onRestore();
+    img.addEventListener('load', () => {
+      element.replaceChildren(img);
+      if (onLoad) onLoad();
     }, { once: true });
 
-    element.replaceChildren(img);
+    // If IMGpx is blocked/unreachable, do nothing: the built-in logo remains visible.
+    img.addEventListener('error', () => {}, { once: true });
+    img.src = logoUrl;
   };
 
   const headerBrand = document.querySelector('.site-header .brand');
-  installLogo(headerBrand, 'external-brand-logo external-brand-logo--header');
+  preloadAndInstall(headerBrand, 'external-brand-logo external-brand-logo--header');
 
   const heroPlaque = document.querySelector('.plaque-inner');
-  if (heroPlaque) {
-    heroPlaque.classList.add('external-logo-plaque');
-    installLogo(
-      heroPlaque,
-      'external-brand-logo external-brand-logo--hero',
-      () => heroPlaque.classList.remove('external-logo-plaque')
-    );
-  }
+  preloadAndInstall(
+    heroPlaque,
+    'external-brand-logo external-brand-logo--hero',
+    () => heroPlaque?.classList.add('external-logo-plaque')
+  );
 
   const footerBrand = document.querySelector('.footer-logo');
-  installLogo(footerBrand, 'external-brand-logo external-brand-logo--footer');
+  preloadAndInstall(footerBrand, 'external-brand-logo external-brand-logo--footer');
 
-  // Use the site's local favicon so the browser-tab icon does not depend on IMGpx.
+  // Browser-tab icon is local and does not depend on IMGpx.
   const favicon = document.querySelector('link[rel="icon"]') || document.createElement('link');
   favicon.rel = 'icon';
   favicon.type = 'image/svg+xml';
