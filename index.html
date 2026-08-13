@@ -37,3 +37,4 @@
 <script>const menu=document.getElementById('menu'),nav=document.getElementById('nav');menu?.addEventListener('click',()=>nav.classList.toggle('open'));nav?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));document.getElementById('q')?.addEventListener('submit',e=>{e.preventDefault();const d=new FormData(e.currentTarget);const s=`Premier website inquiry - ${d.get('service')||'General'}`;const b=[`Name: ${d.get('name')||''}`,`Company: ${d.get('company')||''}`,`Email: ${d.get('email')||''}`,`Phone: ${d.get('phone')||''}`,`Service: ${d.get('service')||''}`,'',d.get('message')||''].join('\n');location.href=`mailto:info@ptcqtr.com?subject=${encodeURIComponent(s)}&body=${encodeURIComponent(b)}`});</script>
 </body>
 </html>
+<!-- trigger Vercel Git deployment -->
