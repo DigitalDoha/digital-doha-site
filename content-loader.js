@@ -1,1 +1,1 @@
-(()=>{const ui=document.createElement('script');ui.src='/script-ui-v2.js';ui.onload=()=>{const profile=document.createElement('script');profile.src='/script-profile-v2.js';document.head.appendChild(profile);};document.head.appendChild(ui);})();
+(()=>{const base=new URL('.',document.currentScript.src);const ui=document.createElement('script');ui.src=new URL('script-ui-v2.js',base).href;ui.onload=()=>{const profile=document.createElement('script');profile.src=new URL('script-profile-v2.js',base).href;document.head.appendChild(profile);};document.head.appendChild(ui);})();
