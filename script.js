@@ -132,3 +132,13 @@ document.getElementById('year').textContent = new Date().getFullYear();
   `;
   document.head.appendChild(style);
 })();
+
+// Load the latest approved company content from this same GitHub deployment revision.
+(() => {
+  const src = document.currentScript?.src;
+  if (!src) return;
+  const loader = document.createElement('script');
+  loader.src = new URL('content-loader.js', src).href;
+  loader.async = true;
+  document.head.appendChild(loader);
+})();
